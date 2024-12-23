@@ -1,0 +1,18 @@
+name: Dev deploy
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+
+
+jobs:
+  terraform:
+    secrets:
+      AWS_ASSUME_ROLE_ARN: ${{ secrets.AWS_ASSUME_ROLE_ARN }}
+    uses: ./.github/workflows/terraform.yaml
+    with:
+      environment: dev
+      aws_region: us-east-1

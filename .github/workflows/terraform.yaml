@@ -1,0 +1,90 @@
+name: Terraform workflow
+
+on:
+  workflow_call:
+    secrets:
+      aws_assume_role_arn: 
+        required: true
+        description: "ARN of the IAM role to assume"
+    inputs:
+      environment:
+        required: true
+        type: string
+      aws_region:
+        required: true    
+        type: string  
+        default: "us-east-1"
+      # aws_statefile_s3_bucket:
+      #   required: true
+      #   type: string
+      # aws_lock_dynamodb_table:
+      #   required: true
+      #   type: string
+
+jobs:
+  terraform:
+    
+    runs-on: ubuntu-latest
+    
+
+    env:
+      AWS_LOCK_DYNAMODB_TABLE: ${{ vars.AWS_LOCK_DYNAMODB_TABLE}}
+      AWS_STATEFILE_S3_BUCKET: ${{ vars.AWS_STATEFILE_S3_BUCKET}}
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.aws_assume_role_arn }}
+          role-session-name: Terraform_OIDC
+          aws-region: ${{ inputs.aws_region }}
+      
+      - name: Read destroy configuration
+        id: read_destroy_config
+        run: |
+          DESTROY="$(jq -r '.${{ inputs.environment }}' ./infra/destroy_config.json)"
+          echo "destroy=$(echo $DESTROY)" >> $GITHUB_OUTPUT
+
+      - name: Terraform Init
+        run: |
+          cd infra && terraform init \
+            -backend-config="bucket=$AWS_STATEFILE_S3_BUCKET" \
+            -backend-config="key=${{ github.event.repository.name }}.tfstate" \
+            -backend-config="region=${{ inputs.aws_region }}" \
+            -backend-config="dynamodb_table=$AWS_LOCK_DYNAMODB_TABLE"
+
+      - name: Terraform Validate
+        run: |
+          cd infra && terraform validate
+
+      - name: Terraform Destroy
+        if: steps.read_destroy_config.outputs.destroy == 'true'
+        id: terraform_destroy
+        run: |
+          cd infra &&
+          terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} &&
+          terraform destroy -var-file="./envs/${{ inputs.environment }}/terraform.tfvars" -auto-approve
+
+      - name: Terraform Plan
+        if: steps.read_destroy_config.outputs.destroy != 'true'
+        run: cd infra && 
+          terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} &&
+          terraform plan -var-file="./envs/${{ inputs.environment }}/terraform.tfvars" -out="${{ inputs.environment }}.tfplan"
+
+      - name: Terraform Apply
+        if: steps.read_destroy_config.outputs.destroy != 'true'
+        run: cd infra &&
+          terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} &&
+          terraform apply "${{ inputs.environment }}.tfplan"
