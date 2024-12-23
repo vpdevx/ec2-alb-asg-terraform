@@ -40,11 +40,12 @@ resource "aws_route_table_association" "lab2_aws_route_table_association" {
 }
 
 resource "aws_security_group" "alb_sg" {
+  name = "alb_sg"
   vpc_id = aws_vpc.lab_vpc.id
 
   ingress {
     from_port       = 80
-    to_port         = 8080
+    to_port         = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -58,11 +59,12 @@ resource "aws_security_group" "alb_sg" {
 }
 
 resource "aws_security_group" "asg_sg" {
+  name = "asg_sg"
   vpc_id = aws_vpc.lab_vpc.id
 
   ingress {
     from_port       = 80
-    to_port         = 8080
+    to_port         = 80
     protocol        = "tcp"
     security_groups = [aws_security_group.alb_sg.id]
   }
