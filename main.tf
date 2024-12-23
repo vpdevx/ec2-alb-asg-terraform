@@ -28,10 +28,17 @@ resource "aws_route_table" "lab_route_table" {
 }
 
 resource "aws_route_table_association" "lab_aws_route_table_association" {
-    subnet_id      = [aws_subnet.lab_subnet.id, aws_subnet.lab_subnet2.id]
+    subnet_id      = aws_subnet.lab_subnet.id
     route_table_id = aws_route_table.lab_route_table.id
   
 }
+
+resource "aws_route_table_association" "lab2_aws_route_table_association" {
+    subnet_id      = aws_subnet.lab_subnet2.id
+    route_table_id = aws_route_table.lab_route_table.id
+  
+}
+
 
 
 
