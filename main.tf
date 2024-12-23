@@ -114,7 +114,7 @@ resource "aws_autoscaling_group" "lab_asg" {
   min_size = 1
   desired_capacity = 1
   launch_template {
-    id = aws_lauch_template.lab_launch_template.id
+    id = aws_launch_template.lab_launch_template.id
     version = "$Latest"
   }
   vpc_zone_identifier = [aws_subnet.lab_subnet.id]
