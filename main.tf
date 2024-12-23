@@ -66,16 +66,16 @@ resource "aws_security_group" "asg_sg" {
 }
 
 
-resource "aws_lb" "lab_lb" {
-  name = "lab_lb"
+resource "aws_lb" "lablb" {
+  name = "lablb"
   internal = false
   load_balancer_type = "application"
   security_groups = [aws_security_group.alb_sg.id]
   subnets = [aws_subnet.lab_subnet.id]
 }
 
-resource "aws_lb_target_group" "lab_target_group" {
-  name = "lab_target_group"
+resource "aws_lb_target_group" "labtargetgroup" {
+  name = "labtargetgroup"
   port = 80
   protocol = "HTTP"
   vpc_id = aws_vpc.lab_vpc.id
@@ -83,17 +83,17 @@ resource "aws_lb_target_group" "lab_target_group" {
 }
 
 resource "aws_lb_listener" "lab_listener" {
-    load_balancer_arn = aws_lb.lab_lb.arn
+    load_balancer_arn = aws_lb.lablb.arn
     port = 80
     protocol = "HTTP"
 
     default_action {
       type = "forward"
-      target_group_arn = aws_lb_target_group.lab_target_group.arn
+      target_group_arn = aws_lb_target_group.labtargetgroup.arn
     }
 }
 
-resource "aws_lauch_template" "lab_launch_template" {
+resource "aws_launch_template" "lab_launch_template" {
   name = "lab_launch_template"
   image_id = "ami-01816d07b1128cd2d"
   instance_type = "t3.micro"
@@ -118,7 +118,7 @@ resource "aws_autoscaling_group" "lab_asg" {
     version = "$Latest"
   }
   vpc_zone_identifier = [aws_subnet.lab_subnet.id]
-  target_group_arns = [aws_lb_target_group.lab_target_group.arn]
+  target_group_arns = [aws_lb_target_group.labtargetgroup.arn]
 
   tag {
     key = "Name"
