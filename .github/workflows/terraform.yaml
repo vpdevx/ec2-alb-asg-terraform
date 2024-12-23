@@ -54,12 +54,12 @@ jobs:
       - name: Read destroy configuration
         id: read_destroy_config
         run: |
-          DESTROY="$(jq -r '.${{ inputs.environment }}' ./infra/destroy_config.json)"
+          DESTROY="$(jq -r '.${{ inputs.environment }}' ./destroy_config.json)"
           echo "destroy=$(echo $DESTROY)" >> $GITHUB_OUTPUT
 
       - name: Terraform Init
         run: |
-          cd infra && terraform init \
+          terraform init \
             -backend-config="bucket=$AWS_STATEFILE_S3_BUCKET" \
             -backend-config="key=${{ github.event.repository.name }}.tfstate" \
             -backend-config="region=${{ inputs.aws_region }}" \
@@ -67,24 +67,23 @@ jobs:
 
       - name: Terraform Validate
         run: |
-          cd infra && terraform validate
+          terraform validate
 
       - name: Terraform Destroy
         if: steps.read_destroy_config.outputs.destroy == 'true'
         id: terraform_destroy
         run: |
-          cd infra &&
           terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} &&
           terraform destroy -var-file="./envs/${{ inputs.environment }}/terraform.tfvars" -auto-approve
 
       - name: Terraform Plan
         if: steps.read_destroy_config.outputs.destroy != 'true'
-        run: cd infra && 
+        run: |
           terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} &&
           terraform plan -var-file="./envs/${{ inputs.environment }}/terraform.tfvars" -out="${{ inputs.environment }}.tfplan"
 
       - name: Terraform Apply
         if: steps.read_destroy_config.outputs.destroy != 'true'
-        run: cd infra &&
+        run: |
           terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} &&
           terraform apply "${{ inputs.environment }}.tfplan"
