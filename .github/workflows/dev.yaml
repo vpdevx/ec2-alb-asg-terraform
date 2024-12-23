@@ -6,8 +6,9 @@ on:
       - dev
 
 permissions:
-
-
+  contents: read
+  id-token: write
+  
 jobs:
   terraform:
     secrets:
