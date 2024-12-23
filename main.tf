@@ -39,15 +39,12 @@ resource "aws_route_table_association" "lab2_aws_route_table_association" {
   
 }
 
-
-
-
 resource "aws_security_group" "alb_sg" {
   vpc_id = aws_vpc.lab_vpc.id
 
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port       = 80
+    to_port         = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -65,7 +62,7 @@ resource "aws_security_group" "asg_sg" {
 
   ingress {
     from_port       = 80
-    to_port         = 80
+    to_port         = 8080
     protocol        = "tcp"
     security_groups = [aws_security_group.alb_sg.id]
   }
@@ -130,7 +127,7 @@ resource "aws_autoscaling_group" "lab_asg" {
     id = aws_launch_template.lab_launch_template.id
     version = "$Latest"
   }
-  vpc_zone_identifier = [aws_subnet.lab_subnet.id]
+  vpc_zone_identifier = [aws_subnet.lab_subnet.id, aws_subnet.lab_subnet2.id]
   target_group_arns = [aws_lb_target_group.labtargetgroup.arn]
 
   tag {
