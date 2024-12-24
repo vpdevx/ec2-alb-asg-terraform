@@ -55,7 +55,7 @@ jobs:
         id: read_destroy_config
         run: |
           DESTROY="$(jq -r '.${{ inputs.environment }}' ./destroy_config.json)"
-          echo "destroy=$(echo $DESTROY)" >> $GITHUB_OUTPUT
+          echo "destroy=$(echo $DESTROY)" >> $GITHUB_OUTPUT && echo $DESTROY"
 
       - name: Terraform Init
         run: |
@@ -75,7 +75,7 @@ jobs:
         if: steps.read_destroy_config.outputs.destroy == 'true'
         id: terraform_destroy
         run: |
-          cd ./envs/${{ inputs.environment }} &&
+
           terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} &&
           terraform destroy -var-file="terraform.tfvars" -auto-approve
 
