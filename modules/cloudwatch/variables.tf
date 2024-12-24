@@ -39,7 +39,7 @@ variable "cloudwatch_alarm_statistic" {
   default = "Average"
 }
 
-variable "cloudwatch_alarm_treshold" {
+variable "cloudwatch_alarm_threshold" {
   description = "The threshold to trigger the alarm"
   type        = number
   default = 25

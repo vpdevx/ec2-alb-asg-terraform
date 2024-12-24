@@ -149,7 +149,7 @@ module "auto_scalling_group" {
 
 module "cloudwatch" {
   source = "../../modules/cloudwatch"
-  alarm_name = "dev-alarm"
+  cloudwatch_alarm_name = "dev-alarm"
   cloudwatch_alarm_description = "This metric monitors the CPU utilization of the EC2 instances"
   cloudwatch_alarm_actions = [module.auto_scalling_group.asg_name]
   cloudwatch_alarm_metric_name = "CPUUtilization"
