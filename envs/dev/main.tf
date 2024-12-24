@@ -133,7 +133,7 @@ module "auto_scalling_group" {
     ]
     asg_policies = [
         {
-        name = "dev-asg-policy"
+        name = "dev-asg-policy-scale-up"
         scaling_adjustment = 1
         adjustment_type = "ChangeInCapacity"
         cooldown = 300
@@ -147,11 +147,14 @@ module "auto_scalling_group" {
     ]
 }
 
+
+
 module "cloudwatch_scale_up_alarm" {
   source = "../../modules/cloudwatch"
   cloudwatch_alarm_name = "dev-alarm"
   cloudwatch_alarm_description = "This metric monitors the CPU utilization of the EC2 instances"
-  cloudwatch_alarm_actions = [module.auto_scalling_group.asg_arn]
+  // get policy arn from the module where the policy name is defined as dev-asg-policy
+  cloudwatch_alarm_actions = [module.auto_scalling_group.asg_policy_arn[0]]
   cloudwatch_alarm_metric_name = "CPUUtilization"
   cloudwatch_alarm_namespace = "AWS/EC2"
   cloudwatch_alarm_statistic = "Average"

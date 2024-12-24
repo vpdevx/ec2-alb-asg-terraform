@@ -48,7 +48,7 @@ variable "lt_security_groups" {
 variable "lt_tags" {
   description = "A map of tags to add to the launch template"
   type        = map(string)
-  // default as foo bar
+// default as foo bar
   default = {
     tag = "test"
   }
