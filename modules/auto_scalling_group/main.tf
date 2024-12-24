@@ -41,7 +41,6 @@ resource "aws_autoscaling_policy" "this" {
   count                  = length(var.asg_policies)
   name                   = var.asg_policies[count.index].name
   autoscaling_group_name = aws_autoscaling_group.this.name
-  policy_type            = var.asg_policies[count.index].policy_type
   adjustment_type        = var.asg_policies[count.index].adjustment_type
   scaling_adjustment     = var.asg_policies[count.index].scaling_adjustment
   cooldown               = var.asg_policies[count.index].cooldown
