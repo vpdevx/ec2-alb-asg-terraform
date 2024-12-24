@@ -90,7 +90,7 @@ variable "asg_policies" {
     adjustment_type   = string
     scaling_adjustment = number
     cooldown          = number
-    autoscalling_group_name = string
+    autoscalling_group_name = optional(string)
   }))
 }
 
