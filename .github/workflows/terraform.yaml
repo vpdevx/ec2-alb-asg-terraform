@@ -55,7 +55,7 @@ jobs:
         id: read_destroy_config
         run: |
           DESTROY="$(jq -r '.${{ inputs.environment }}' ./destroy_config.json)"
-          echo "destroy=$(echo $DESTROY)" >> $GITHUB_OUTPUT"
+          echo "destroy=$(echo $DESTROY)" >> $GITHUB_OUTPUT
 
       - name: Terraform Init
         run: |
