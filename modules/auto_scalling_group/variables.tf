@@ -30,7 +30,7 @@ variable "lt_key_name" {
 variable "lt_user_data" {
   description = "The user data to use for the launch template"
   type        = string
-  default     = filebase64("${path.module}/files/nginx-setup.sh")
+  default     = ""
 }
 
 variable "lt_public_ip_enabled" {
@@ -83,22 +83,6 @@ variable "asg_policies" {
     cooldown          = number
     autoscalling_group_name = string
   }))
-  default = [
-        {
-        name = "${var.asg_prefix_name}-${var.asg_name}-policy-scale-up"
-        scaling_adjustment = 1
-        adjustment_type = "ChangeInCapacity"
-        cooldown = 300
-        autoscaling_group_name = "${var.asg_prefix_name}-${var.asg_name}"
-        },
-        {
-        name = "${var.asg_prefix_name}-${var.asg_name}-policy-scale-down"
-        scaling_adjustment = -1
-        adjustment_type = "ChangeInCapacity"
-        cooldown = 300
-        autoscaling_group_name = "${var.asg_prefix_name}-${var.asg_name}"
-        }
-    ]
 }
 
 variable "asg_name" {
