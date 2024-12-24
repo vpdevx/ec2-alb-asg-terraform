@@ -75,7 +75,7 @@ jobs:
         if: steps.read_destroy_config.outputs.destroy == 'true'
         id: terraform_destroy
         run: |
-          ls -la &&
+          cd ./envs/${{ inputs.environment }} &&
           terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }} &&
           terraform destroy -var-file="terraform.tfvars" -auto-approve
 
