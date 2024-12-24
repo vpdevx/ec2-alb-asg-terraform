@@ -147,7 +147,7 @@ module "auto_scalling_group" {
     ]
 }
 
-module "cloudwatch" {
+module "cloudwatch_scale_up_alarm" {
   source = "../../modules/cloudwatch"
   cloudwatch_alarm_name = "dev-alarm"
   cloudwatch_alarm_description = "This metric monitors the CPU utilization of the EC2 instances"
