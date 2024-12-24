@@ -110,7 +110,7 @@ resource "aws_launch_template" "lab_launch_template" {
   image_id = "ami-01816d07b1128cd2d"
   instance_type = "t3.micro"
   key_name = var.key_par_name
-
+  
   user_data = filebase64("${path.module}/files/nginx-setup.sh")
 
   network_interfaces {
