@@ -106,7 +106,7 @@ module "auto_scalling_group" {
     lt_image_id = "ami-01816d07b1128cd2d"
     lt_instance_type = "t3.micro"
     lt_key_name = "asg-lab"
-    lt_user_data =  filebase64("${path.module}/files/nginx-setup.sh")
+    lt_user_data =  filebase64("../../files/nginx-setup.sh")
     lt_public_ip_enabled = false
     lt_security_groups = [module.asg_security_group.sg_id]
     lt_tags = {
