@@ -151,7 +151,7 @@ module "cloudwatch_scale_up_alarm" {
   source = "../../modules/cloudwatch"
   cloudwatch_alarm_name = "dev-alarm"
   cloudwatch_alarm_description = "This metric monitors the CPU utilization of the EC2 instances"
-  cloudwatch_alarm_actions = [module.auto_scalling_group.asg_name]
+  cloudwatch_alarm_actions = [module.auto_scalling_group.asg_arn]
   cloudwatch_alarm_metric_name = "CPUUtilization"
   cloudwatch_alarm_namespace = "AWS/EC2"
   cloudwatch_alarm_statistic = "Average"
