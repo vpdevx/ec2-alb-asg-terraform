@@ -151,7 +151,7 @@ module "auto_scalling_group" {
 
 module "cloudwatch_scale_up_alarm" {
   source = "../../modules/cloudwatch"
-  cloudwatch_alarm_name = "dev-alarm"
+  cloudwatch_alarm_name = "dev-alarm-scale-up"
   cloudwatch_alarm_description = "This metric monitors the CPU utilization of the EC2 instances"
   cloudwatch_alarm_actions = [module.auto_scalling_group.asg_policy_arn[0]]
   cloudwatch_alarm_metric_name = "CPUUtilization"
@@ -161,6 +161,23 @@ module "cloudwatch_scale_up_alarm" {
   cloudwatch_alarm_evaluation_periods = "1"
   cloudwatch_alarm_threshold = "80"
   cloudwatch_alarm_comparison_operator = "GreaterThanOrEqualToThreshold"
+  cloudwatch_alarm_dimensions = {
+    AutoScalingGroupName = module.auto_scalling_group.asg_name
+  }
+}
+
+module "cloudwatch_scale_down_alarm" {
+  source = "../../modules/cloudwatch"
+  cloudwatch_alarm_name = "dev-alarm-scale-down"
+  cloudwatch_alarm_description = "This metric monitors the CPU utilization of the EC2 instances"
+  cloudwatch_alarm_actions = [module.auto_scalling_group.asg_policy_arn[1]]
+  cloudwatch_alarm_metric_name = "CPUUtilization"
+  cloudwatch_alarm_namespace = "AWS/EC2"
+  cloudwatch_alarm_statistic = "Average"
+  cloudwatch_alarm_period = "300"
+  cloudwatch_alarm_evaluation_periods = "1"
+  cloudwatch_alarm_threshold = "30"
+  cloudwatch_alarm_comparison_operator = "LessThanOrEqualToThreshold"
   cloudwatch_alarm_dimensions = {
     AutoScalingGroupName = module.auto_scalling_group.asg_name
   }
