@@ -116,7 +116,7 @@ module "auto_scalling_group" {
     asg_name = "asg"
     asg_min_size = 1
     asg_max_size = 3
-    asg_desired_capacity = 2
+    asg_desired_capacity = 1
     asg_subnets = module.network.subnet_ids
     asg_target_group_arn = [module.alb.lb_tg_arn]
     asg_tags = [
@@ -153,7 +153,6 @@ module "cloudwatch_scale_up_alarm" {
   source = "../../modules/cloudwatch"
   cloudwatch_alarm_name = "dev-alarm"
   cloudwatch_alarm_description = "This metric monitors the CPU utilization of the EC2 instances"
-  // get policy arn from the module where the policy name is defined as dev-asg-policy
   cloudwatch_alarm_actions = [module.auto_scalling_group.asg_policy_arn[0]]
   cloudwatch_alarm_metric_name = "CPUUtilization"
   cloudwatch_alarm_namespace = "AWS/EC2"
