@@ -1,0 +1,19 @@
+name: Prod deploy
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+  
+jobs:
+  terraform:
+    secrets:
+      AWS_ASSUME_ROLE_ARN: ${{ secrets.AWS_ASSUME_ROLE_ARN }}
+    uses: ./.github/workflows/terraform.yaml
+    with:
+      environment: prod
+      aws_region: us-east-1
