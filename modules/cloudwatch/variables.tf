@@ -4,42 +4,42 @@ variable "cloudwatch_alarm_name" {
   default = "high_cpu_usage"
 }
 
-variable "cloudwatch_comparison_operator" {
+variable "cloudwatch_alarm_comparison_operator" {
   description = "The comparison operator for the alarm"
   type        = string
 }
 
-variable "cloudwatch_evaluation_periods" {
+variable "cloudwatch_alarm_evaluation_periods" {
   description = "The number of periods to evaluate the metric"
   type        = number
   default = 2
 }
 
-variable "cloudwatch_metric_name" {
+variable "cloudwatch_alarm_metric_name" {
   description = "The name of the metric to monitor"
   type        = string
   default = "CPUUtilization"
 }
 
-variable "cloudwatch_namespace" {
+variable "cloudwatch_alarm_namespace" {
   description = "The namespace of the metric"
   type        = string
   default = "AWS/EC2"
 }
 
-variable "cloudwatch_period" {
+variable "cloudwatch_alarm_period" {
   description = "The period of the metric"
   type        = number
   default = 30
 }
 
-variable "cloudwatch_statistic" {
+variable "cloudwatch_alarm_statistic" {
   description = "The statistic to apply to the metric"
   type        = string
   default = "Average"
 }
 
-variable "cloudwatch_treshold" {
+variable "cloudwatch_alarm_threshold" {
   description = "The threshold to trigger the alarm"
   type        = number
   default = 25
@@ -56,7 +56,7 @@ variable "cloudwatch_alarm_actions" {
   type        = list(string)
 }
 
-variable "cloudwatch_dimensions" {
+variable "cloudwatch_alarm_dimensions" {
   description = "The dimensions to apply to the metric"
   type        = map(string)
 }

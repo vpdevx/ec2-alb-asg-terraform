@@ -30,7 +30,7 @@ variable "lt_key_name" {
 variable "lt_user_data" {
   description = "The user data to use for the launch template"
   type        = string
-  default     = filebase64("${path.module}/files/nginx-setup.sh")
+  default     = ""
 }
 
 variable "lt_public_ip_enabled" {
@@ -43,6 +43,15 @@ variable "lt_security_groups" {
   description = "A list of security groups to attach to the launch template"
   type        = list(string)
   default     = []
+}
+
+variable "lt_tags" {
+  description = "A map of tags to add to the launch template"
+  type        = map(string)
+// default as foo bar
+  default = {
+    tag = "test"
+  }
 }
 
 variable "asg_min_size" {
@@ -81,24 +90,8 @@ variable "asg_policies" {
     adjustment_type   = string
     scaling_adjustment = number
     cooldown          = number
-    autoscalling_group_name = string
+    autoscalling_group_name = optional(string)
   }))
-  default = [
-        {
-        name = "${var.asg_prefix_name}-${var.asg_name}-policy-scale-up"
-        scaling_adjustment = 1
-        adjustment_type = "ChangeInCapacity"
-        cooldown = 300
-        autoscaling_group_name = "${var.asg_prefix_name}-${var.asg_name}"
-        },
-        {
-        name = "${var.asg_prefix_name}-${var.asg_name}-policy-scale-down"
-        scaling_adjustment = -1
-        adjustment_type = "ChangeInCapacity"
-        cooldown = 300
-        autoscaling_group_name = "${var.asg_prefix_name}-${var.asg_name}"
-        }
-    ]
 }
 
 variable "asg_name" {

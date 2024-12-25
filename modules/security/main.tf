@@ -1,5 +1,5 @@
 resource "aws_security_group" "this" {
-  name = var.name_prefix != "" ? "${var.name_prefix}-${var.name_suffix}" : var.sg_name
+  name = var.name_prefix != "" ? "${var.name_prefix}-${var.sg_name}" : var.sg_name
   vpc_id = var.vpc_id
   dynamic "ingress" {
     for_each = var.ingress_rules
